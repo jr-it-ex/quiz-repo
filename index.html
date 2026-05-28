@@ -198,6 +198,10 @@
             box-sizing: border-box;
             background-image: radial-gradient(circle at 50% 50%, #0c1a3a 0%, #020612 100%);
             overflow: hidden;
+            /* PDF出力時のサイズ崩れ・見切れ対策 */
+            width: 842px; /* 横幅をA4比率の842pxに完全固定 */
+            height: 595px; /* 高さをA4比率の595pxに完全固定 */
+            margin: 0 auto;
         }
 
         /* 装飾用サイバーコーナー */
@@ -242,7 +246,7 @@
             font-size: 14px;
             letter-spacing: 2px;
             color: #8da2cb;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .cert-name {
@@ -250,16 +254,16 @@
             border-bottom: 2px solid #00f0ff;
             display: inline-block;
             padding: 0 30px 8px 30px;
-            margin: 15px 0;
+            margin: 10px 0;
             color: #ffffff;
             font-weight: bold;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
         }
 
         .cert-text {
-            font-size: 18px;
-            line-height: 1.9;
-            margin: 25px auto;
+            font-size: 17px;
+            line-height: 1.8;
+            margin: 15px auto;
             max-width: 680px;
             color: #e2e8f0;
             text-align: left;
@@ -272,7 +276,7 @@
             font-size: 18px;
             color: #00f0ff;
             font-weight: bold;
-            margin-bottom: 35px;
+            margin-bottom: 20px;
         }
 
         .cert-ceo span {
@@ -285,9 +289,9 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            margin-top: 20px;
+            margin-top: 15px;
             border-top: 1px dashed rgba(0, 240, 255, 0.3);
-            padding-top: 25px;
+            padding-top: 15px;
             font-size: 13px;
             color: #8da2cb;
             text-align: left;
@@ -304,6 +308,15 @@
         /* 画面切り替え用の非表示クラス */
         .hidden {
             display: none !important;
+        }
+
+        /* スマートフォンなど画面幅が狭いときの縮小表示用（レスポンシブ対応） */
+        @media screen and (max-width: 880px) {
+            #cert-wrapper {
+                overflow-x: auto; /* スマホ画面で賞状がはみ出た場合に横スクロール可能に */
+                padding: 10px;
+                -webkit-overflow-scrolling: touch;
+            }
         }
     </style>
 </head>
@@ -428,7 +441,7 @@
             { q: "USBメモリは、パソコンからデータを持ち運ぶために使う小さな記録装置である。", a: true },
             { q: "インターネットで使われる「検索エンジン」とは、調べたい言葉を入力して情報を探すシステムのことである。", a: true },
             { q: "スマホのアプリやOSを最新の状態にアップデート（更新）することは、安全性を高めるためにも重要である。 ", a: true },
-            { q: "ネットゲームで知り合った人に「ゲームのアイテムをあげるからパスワードを教えて」と言われたら、すぐに教えるべきである。", a: false },
+            { q: "ネットゲームで知り合った人に「ゲームのアイテムをあげるからパスワードを教えて」言われたら、すぐに教えるべきである。", a: false },
             { q: "パソコンのキーボード配列で、アルファベットの上の列が左から「Q-W-E-R-T-Y」となっている配列をQWERTY配列とよぶ。", a: true },
             { q: "コンピュータの世界の最小データ単位は「ビット（bit）」である。", a: true },
             { q: "「1バイト（Byte）」は、一般的に「10ビット」のことである。", a: false },
@@ -499,11 +512,11 @@
             
             // 80%以上（48問以上）で合格
             if (score >= 48) {
-                document.getElementById('result-status').innerText = "🎉 【合格】おめでとう！";
+                document.getElementById('result-status').innerText = "🎉 【結果：合格】おめでとうございます！今後のご活躍を心より応援しております。";
                 document.getElementById('result-status').style.color = "#00ffaa";
                 document.getElementById('pass-action').classList.remove('hidden');
             } else {
-                document.getElementById('result-status').innerText = "🚨 【不合格】ざんねん！";
+                document.getElementById('result-status').innerText = "【結果：不合格】この度はご受験ありがとうございました。またのご挑戦をお待ちしております。";
                 document.getElementById('result-status').style.color = "#ff3355";
                 document.getElementById('fail-action').classList.remove('hidden');
             }
@@ -554,7 +567,7 @@
             qrContainer.innerHTML = ""; // 初期化
             
             // GitHub Pagesの個別証明書URLをターゲットにする
-            const verifyUrl = `https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/verify-${generatedCertId}.html`;
+            const verifyUrl = `https://ryopc.github.io/it-quiz-3rd-class-repo/verify-${generatedCertId}.html`;
             
             new QRCode(qrContainer, {
                 text: verifyUrl,
@@ -579,11 +592,19 @@
             
             // A4サイズの横向き（Landscape）にジャストフィットさせる設定
             const opt = {
-                margin:       8,
+                margin:       0, // 余白なしで画像と背景を最大限合わせる
                 filename:     `IT_Literacy_Cert_${generatedCertId}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#020612' },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
+                html2canvas:  { 
+                    scale: 2, 
+                    useCORS: true, 
+                    backgroundColor: '#020612',
+                    scrollX: 0,
+                    scrollY: 0,
+                    windowWidth: 842, // 出力時に強制的にデスクトップ幅をシミュレート
+                    windowHeight: 595
+                },
+                jsPDF:        { unit: 'px', hotfixes: ['px_scaling'], format: [842, 595], orientation: 'landscape' }
             };
 
             // PDFダウンロード実行
