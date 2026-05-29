@@ -455,14 +455,17 @@
            ★PDF出力専用：画面外でレンダリングするための一時配置コンテナ
            ここにある要素をhtml2pdfに送ることで、スクロールや画面幅の影響をゼロにします。
            ---------------------------------------------------- */
-        #pdf-rendering-sandbox {
-            position: absolute;
-            left: -9999px;
-            top: -9999px;
-            width: 842px;
-            height: 595px;
-            overflow: hidden;
-        }
+#pdf-rendering-sandbox {
+    position: fixed; /* absolute から fixed に変更 */
+    left: -9999px;
+    top: -9999px;
+    width: 842px;
+    height: 595px;
+    overflow: hidden;
+    /* 背景色をここでも指定しておくと、より安定します */
+    background-color: #020612; 
+}
+
     </style>
 </head>
 <body>
@@ -781,37 +784,7 @@
             document.getElementById('pdf-lbl-date').innerText = timestampStr;
 
             // 検証用のQRコードを作成
-            const verifyUrl = `https://ryopc.github.io/it-quiz-3rd-class-repo/verify-${generatedCertId}.html`;
-
-            // 1. プレビュー用QR生成
-            const previewQr = document.getElementById("preview-qrcode");
-            previewQr.innerHTML = "";
-            new QRCode(previewQr, {
-                text: verifyUrl,
-                width: 80,
-                height: 80,
-                colorDark: "#020612",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
-
-            // 2. PDF出力用QR生成
-            const pdfQr = document.getElementById("pdf-qrcode");
-            pdfQr.innerHTML = "";
-            new QRCode(pdfQr, {
-                text: verifyUrl,
-                width: 80,
-                height: 80,
-                colorDark: "#020612",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
-
-            // 賞状エリアを表示し、スクロール
-            document.getElementById('cert-wrapper').classList.remove('hidden');
-            document.getElementById('pass-action').classList.add('hidden');
-            document.getElementById('cert-wrapper').scrollIntoView({ behavior: 'smooth' });
-        }
+            const verifyUrl = `https://quiz.ryopc.f5.si/verify-${generatedCertId}.html`;
 
         // --- 画面外（隠しコンテナ）を使った高精度PDFダウンロード ---
         function downloadPDF() {
@@ -823,13 +796,24 @@
                 filename:     `IT_Literacy_Cert_${generatedCertId}.pdf`,
                 image:        { type: 'jpeg', quality: 1.0 },
                 html2canvas:  { 
-                    scale: 3,                 // 解像度倍率を上げて文字のボケをクリアに
+                    scale: 2.5,               // ★3だと端末によってメモリ不足で黒く潰れるため、非常にクリアかつ安定する2.5を推奨
                     useCORS: true, 
                     backgroundColor: '#020612',
                     scrollX: 0,
                     scrollY: 0,
-                    windowWidth: 842,         // レンダリング幅をA4基準に完全固定
-                    windowHeight: 595         // レンダリング高をA4基準に完全固定
+                    /* 
+                       ★最重要：スマホ対策
+                       windowWidthを「1200」など大きく設定することで、
+                       スマホの狭い画面幅を無視して、広いデスクトップ画面としてレンダリングさせます。
+                    */
+                    windowWidth: 1200,        
+                    windowHeight: 900,
+                    /*
+                       ★最重要：切り取りサイズ指定
+                       広がった仮想空間の中から、賞状の原寸大である「842×595」の領域だけを正確に切り抜きます。
+                    */
+                    width: 842,
+                    height: 595
                 },
                 jsPDF:        { 
                     unit: 'px', 
@@ -842,6 +826,7 @@
             // 隔離バッファ領域を用いて完璧なレイアウト比率でPDFを出力
             html2pdf().set(opt).from(element).save();
         }
+
     </script>
 </body>
 </html>
