@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IT基礎検定-by game_ryo</title>
-    <!-- 外部ライブラリ（html2pdf.js と qrcode.js）の読み込み -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -321,7 +320,6 @@
 </head>
 <body>
 
-    <!-- 1. 警告・説明画面 -->
     <div id="screen-warning" class="container">
         <div class="header-logo">IT LITERACY PROMOTION ASSOCIATION</div>
         <h1>IT基礎検定</h1>
@@ -336,7 +334,6 @@
         <button class="btn" onclick="startQuiz()">同意して試験を開始する</button>
     </div>
 
-    <!-- 2. クイズ実行画面 -->
     <div id="screen-quiz" class="container hidden">
         <div class="quiz-header">
             <span id="quiz-progress">第 1 問 / 60 問</span>
@@ -349,30 +346,26 @@
         </div>
     </div>
 
-    <!-- 3. 結果発表画面 -->
     <div id="screen-result" class="container hidden">
         <div class="header-logo">EXAMINATION RESULT</div>
         <h1 id="result-status">判定中</h1>
         <p id="result-text">あなたの正解数は -- 問でした。</p>
         
-        <!-- 合格時フォーム -->
         <div id="pass-action" class="hidden">
             <p>見事合格です！デジタル合格証明書にのせるお名前を入力してください。</p>
             <input type="text" id="user-name" class="input-name" placeholder="なまえ（ひらがな または 漢字）" maxlength="20"><br>
             <button class="btn" onclick="generateCertificate()">証明書を発行する</button>
         </div>
 
-        <!-- 不合格時フォーム -->
         <div id="fail-action" class="hidden">
             <p>ITクイズ検定合格（48問以上）まであと一歩でした！もう一度勉強して再挑戦してみよう！</p>
             <button class="btn" onclick="location.reload()">もう一度受ける</button>
         </div>
     </div>
 
-    <!-- 4. HTML賞状表示＆PDFダウンロードエリア -->
-    <div id="cert-wrapper">
+    <div id="cert-wrapper" class="hidden">
         <div class="certificate" id="certificate-area">
-            <div class="cert-header">IT Fundamentals Certification Certificate/div>
+            <div class="cert-header">IT Fundamentals Certification Certificate</div>
             <div class="cert-title">IT基礎検定 合格証書</div>
             <div class="cert-subtitle">DIGITAL CERTIFICATE OF JUNIOR IT LITERACY</div>
             
@@ -394,7 +387,6 @@
                     <div><strong>合格日時:</strong> <span id="lbl-date">2026/05/29 12:00:00</span></div>
                 </div>
                 <div>
-                    <!-- QRコード生成先 -->
                     <div class="qrcode-box" id="qrcode"></div>
                 </div>
             </div>
@@ -536,7 +528,7 @@
             const now = new Date();
             const timestampStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
 
-            // --- 2. Cloudflare Workersへデータを非同期POST送信 (バックグラウンド処理) ---
+            // --- Cloudflare Workersへデータを非同期POST送信 ---
             const payload = {
                 id: generatedCertId,
                 name: nameInput,
@@ -544,16 +536,14 @@
                 timestamp: timestampStr
             };
 
-            // プレースホルダーURLへPOST
             fetch('https://q.ryotagtagtag.workers.dev/', {
-fetch('https://q.ryotagtagtag.workers.dev/', {
-    method: 'POST',
-    mode: 'cors', // 🌐 これを追加してCORSモードを明示する
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(payload)
-})
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
             .then(response => console.log('Workersデータ送信に成功しました'))
             .catch(error => console.error('送信エラー(プレースホルダーURLのためエラーが出ても賞状は出ます):', error));
 
@@ -563,11 +553,10 @@ fetch('https://q.ryotagtagtag.workers.dev/', {
             document.getElementById('lbl-id').innerText = `IT-CERT-${generatedCertId}`;
             document.getElementById('lbl-date').innerText = timestampStr;
 
-            // --- 4. QRコードの自動生成 ---
+            // --- QRコードの自動生成 ---
             const qrContainer = document.getElementById("qrcode");
             qrContainer.innerHTML = ""; // 初期化
             
-            // GitHub Pagesの個別証明書URLをターゲットにする
             const verifyUrl = `https://ryopc.github.io/it-quiz-3rd-class-repo/verify-${generatedCertId}.html`;
             
             new QRCode(qrContainer, {
@@ -587,13 +576,12 @@ fetch('https://q.ryotagtagtag.workers.dev/', {
             document.getElementById('cert-wrapper').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // --- 3. html2pdf.jsを使ったPDFダウンロード機能 ---
+        // --- html2pdf.jsを使ったPDFダウンロード機能 ---
         function downloadPDF() {
             const element = document.getElementById('certificate-area');
             
-            // A4サイズの横向き（Landscape）にジャストフィットさせる設定
             const opt = {
-                margin:       0, // 余白なしで画像と背景を最大限合わせる
+                margin:       0,
                 filename:     `IT_Literacy_Cert_${generatedCertId}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { 
@@ -602,7 +590,7 @@ fetch('https://q.ryotagtagtag.workers.dev/', {
                     backgroundColor: '#020612',
                     scrollX: 0,
                     scrollY: 0,
-                    windowWidth: 842, // 出力時に強制的にデスクトップ幅をシミュレート
+                    windowWidth: 842,
                     windowHeight: 595
                 },
                 jsPDF:        { unit: 'px', hotfixes: ['px_scaling'], format: [842, 595], orientation: 'landscape' }
