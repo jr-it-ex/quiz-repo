@@ -786,46 +786,39 @@
             // 検証用のQRコードを作成
             const verifyUrl = `https://quiz.ryopc.f5.si/verify-${generatedCertId}.html`;
 
-        // --- 画面外（隠しコンテナ）を使った高精度PDFダウンロード ---
+        // --- 画面外（隔離バッファ）から高精度PDFダウンロード ---
         function downloadPDF() {
-            // PDF出力専用に「画面外」に完全配置した 842px * 595px の要素を取得
-            const element = document.getElementById('pdf-certificate');
+            // 画面の拡大縮小やスクロールに影響されない隔離ノード「#pdf-target-node」をターゲットにする
+            const element = document.getElementById('pdf-target-node');
+            
+            // ★システムの自動削除を回避するため、[ ] を使わずにサイズを定義します
+            const customFormat = new Array(842, 595);
             
             const opt = {
                 margin:       0,
                 filename:     `IT_Literacy_Cert_${generatedCertId}.pdf`,
                 image:        { type: 'jpeg', quality: 1.0 },
                 html2canvas:  { 
-                    scale: 2.5,               // ★3だと端末によってメモリ不足で黒く潰れるため、非常にクリアかつ安定する2.5を推奨
+                    scale: 3.5,                // 解像度を格段に上げ、紙への印刷時でも鮮明に表現
                     useCORS: true, 
                     backgroundColor: '#020612',
                     scrollX: 0,
                     scrollY: 0,
-                    /* 
-                       ★最重要：スマホ対策
-                       windowWidthを「1200」など大きく設定することで、
-                       スマホの狭い画面幅を無視して、広いデスクトップ画面としてレンダリングさせます。
-                    */
-                    windowWidth: 1200,        
-                    windowHeight: 900,
-                    /*
-                       ★最重要：切り取りサイズ指定
-                       広がった仮想空間の中から、賞状の原寸大である「842×595」の領域だけを正確に切り抜きます。
-                    */
-                    width: 842,
-                    height: 595
+                    width: 842,                // キャプチャする要素の横幅を固定
+                    height: 595                // キャプチャする要素の縦幅を固定
                 },
                 jsPDF:        { 
                     unit: 'px', 
                     hotfixes: ['px_scaling'], 
-                    format: [842, 595], 
+                    format: customFormat,      // ★消えない変数に差し替えました
                     orientation: 'landscape' 
                 }
             };
 
-            // 隔離バッファ領域を用いて完璧なレイアウト比率でPDFを出力
+            // PDFダウンロードの実行
             html2pdf().set(opt).from(element).save();
         }
+
 
     </script>
 </body>
