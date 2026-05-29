@@ -778,6 +778,9 @@
             // 画面の拡大縮小やスクロールに影響されない隔離ノード「#pdf-target-node」をターゲットにする
             const element = document.getElementById('pdf-target-node');
             
+            // ★システムの自動削除を回避するため、[ ] を使わずにサイズを定義します
+            const customFormat = new Array(842, 595);
+            
             const opt = {
                 margin:       0,
                 filename:     `IT_Literacy_Cert_${generatedCertId}.pdf`,
@@ -788,18 +791,13 @@
                     backgroundColor: '#020612',
                     scrollX: 0,
                     scrollY: 0,
-                    /* 
-                       ★PCバグ解決の修正ポイント：
-                       windowWidth/Heightの制限を外し、width/heightで直接切り取るサイズを指定します。
-                       これにより、PCのブラウザ拡大率（125%等）やスクロールバーの影響を一切受けなくなります。
-                    */
                     width: 842,                // キャプチャする要素の横幅を固定
                     height: 595                // キャプチャする要素の縦幅を固定
                 },
                 jsPDF:        { 
                     unit: 'px', 
                     hotfixes: ['px_scaling'], 
-                    format:, 
+                    format: customFormat,      // ★消えない変数に差し替えました
                     orientation: 'landscape' 
                 }
             };
@@ -807,6 +805,7 @@
             // PDFダウンロードの実行
             html2pdf().set(opt).from(element).save();
         }
+
 
     </script>
 </body>
