@@ -324,7 +324,7 @@
         <div class="header-logo">IT LITERACY PROMOTION ASSOCIATION</div>
         <h1>IT基礎検定</h1>
         <p>未来を創るIT技術やプログラミング、ネットワーク知識を測る試験へようこそ！</p>
-        <p>全部で <strong>60問</strong> の○×クイズが出題されます。<br>合格基準は <strong>80%以上（48問以上の正解）</strong> です。</p>
+        <p>全部で <strong>20問</strong> の○×クイズが出題されます。<br>合格基準は <strong>80%以上（16問以上の正解）</strong> です。</p>
         
         <div class="warning-box">
             <div class="warning-title">【警告・最重要ルール】</div>
@@ -336,7 +336,7 @@
 
     <div id="screen-quiz" class="container hidden">
         <div class="quiz-header">
-            <span id="quiz-progress">第 1 問 / 60 問</span>
+            <span id="quiz-progress">第 1 問 / 20 問</span>
             <span id="quiz-score-live">正解数: 0</span>
         </div>
         <div class="question-text" id="question-text">ここに問題文が表示されます。</div>
@@ -358,7 +358,7 @@
         </div>
 
         <div id="fail-action" class="hidden">
-            <p>ITクイズ検定合格（48問以上）まであと一歩でした！もう一度勉強して再挑戦してみよう！</p>
+            <p>ITクイズ検定合格（16問以上）まであと一歩でした！もう一度勉強して再挑戦してみよう！</p>
             <button class="btn" onclick="location.reload()">もう一度受ける</button>
         </div>
     </div>
@@ -397,28 +397,28 @@
     </div>
 
     <script>
-        // 小学生向けのIT・コンピュータ・最新技術に関する全60問のクイズデータ
+        // 小学生向けのIT・コンピュータ・最新技術に関する全20問のクイズデータ
         const quizData = [
-  { q: "コンピュータの内蔵時計やカレンダーは、パソコンの電源を完全に切っても、内部の小さな電池によって動き続けている。", a: true },
-  { q: "パソコンの画面に表示されるフォルダーやファイルの見た目を、分かりやすく小さな絵にしたものを「アイコン」という。", a: true },
-  { q: "「オープンソース（OSS）」とは、プログラムの設計図（ソースコード）が無料公開されており、誰でも自由に改良できるソフトウェアである。", a: true },
-  { q: "インターネット上で他人の悪口を書き込んだり、意地悪なメッセージを送る行為は、絶対にやってはいけないことである。", a: true },
-  { q: "CPUはコンピュータの計算や処理を担当する重要な部品である。", a: true },
-  { q: "RAMはデータを永久に保存しておくための装置である。", a: false },
-  { q: "SSDは一般的にHDDよりもデータの読み書きが速い。", a: true },
-  { q: "URLはWebサイトの住所を表す文字列である。", a: true },
-  { q: "Wi-Fiを使うには必ずLANケーブルを接続しなければならない。", a: false },
-  { q: "OSはコンピュータ全体を管理する基本ソフトウェアである。", a: true },
-  { q: "マウスは文字を保存するための記憶装置である。", a: false },
-  { q: "ブラウザはWebページを見るためのソフトウェアである。", a: true },
-  { q: "パスワードは他人に教えたほうが安全である。", a: false },
-  { q: "ファイルを削除しても、ごみ箱から復元できる場合がある。", a: true },
-  { q: "インターネットに接続していなくても動くアプリもある。", a: true },
-  { q: "クラウドとは空にあるサーバーのことである。", a: false },
-  { q: "メールアドレスには通常「@」が含まれている。", a: true },
-  { q: "USBメモリはデータを保存できる。", a: true },
-  { q: "コピー＆ペーストは情報を複製して貼り付ける操作である。", a: true },
-  { q: "アップデートはソフトウェアを新しく改善するために行う。", a: true }
+            { q: "コンピュータの内蔵時計やカレンダーは、パソコンの電源を完全に切っても、内部の小さな電池によって動き続けている。", a: true },
+            { q: "パソコンの画面に表示されるフォルダーやファイルの見た目を、分かりやすく小さな絵にしたものを「アイコン」という。", a: true },
+            { q: "「オープンソース（OSS）」とは、プログラムの設計図（ソースコード）が無料公開されており、誰でも自由に改良できるソフトウェアである。", a: true },
+            { q: "インターネット上で他人の悪口を書き込んだり、意地悪なメッセージを送る行為は、絶対にやってはいけないことである。", a: true },
+            { q: "CPUはコンピュータの計算や処理を担当する重要な部品である。", a: true },
+            { q: "RAMはデータを永久に保存しておくための装置である。", a: false },
+            { q: "SSDは一般的にHDDよりもデータの読み書きが速い。", a: true },
+            { q: "URLはWebサイトの住所を表す文字列である。", a: true },
+            { q: "Wi-Fiを使うには必ずLANケーブルを接続しなければならない。", a: false },
+            { q: "OSはコンピュータ全体を管理する基本ソフトウェアである。", a: true },
+            { q: "マウスは文字を保存するための記憶装置である。", a: false },
+            { q: "ブラウザはWebページを見るためのソフトウェアである。", a: true },
+            { q: "パスワードは他人に教えたほうが安全である。", a: false },
+            { q: "ファイルを削除しても、ごみ箱から復元できる場合がある。", a: true },
+            { q: "インターネットに接続していなくても動くアプリもある。", a: true },
+            { q: "クラウドとは空にあるサーバーのことである。", a: false },
+            { q: "メールアドレスには通常「@」が含まれている。", a: true },
+            { q: "USBメモリはデータを保存できる。", a: true },
+            { q: "コピー＆ペーストは情報を複製して貼り付ける操作である。", a: true },
+            { q: "アップデートはソフトウェアを新しく改善するために行う。", a: true }
         ];
 
         let currentQuestion = 0;
@@ -459,9 +459,9 @@
             document.getElementById('screen-quiz').classList.add('hidden');
             document.getElementById('screen-result').classList.remove('hidden');
             
-            document.getElementById('result-text').innerHTML = `あなたの正解数は <strong>60問中 ${score} 問</strong> でした！`;
+            document.getElementById('result-text').innerHTML = `あなたの正解数は <strong>20問中 ${score} 問</strong> でした！`;
             
-            // 80%以上（48問以上）で合格
+            // 80%以上（16問以上）で合格
             if (score >= 16) {
                 document.getElementById('result-status').innerText = "🎉 【結果：合格】おめでとうございます！今後のご活躍を心より応援しております。";
                 document.getElementById('result-status').style.color = "#00ffaa";
@@ -493,12 +493,10 @@
                 id: generatedCertId,
                 name: nameInput,
                 score: score,
-                timestamp: timestampStr
-                examTitle: it基礎検定(20問)
-               qualification: it基礎検定(20問)合格
-               totalQuestions: 20
-
-
+                timestamp: timestampStr,
+                examTitle: 'it基礎検定(20問)',
+                qualification: 'it基礎検定(20問)合格',
+                totalQuestions: 20
             };
 
             fetch('https://q.ryotagtagtag.workers.dev/', {
