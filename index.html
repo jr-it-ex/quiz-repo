@@ -493,11 +493,6 @@
             <span>キッズIT検定</span>
         </div>
         
-        <div class="nav-right">
-            <select class="lang-selector" id="langSelector" onchange="changeLanguage(this.value)">
-                <option value="ja">日本語</option>
-                <option value="en">English</option>
-            </select>
 
             <button class="menu-toggle" id="menuToggle" aria-label="メニューを開く">
                 <span></span><span></span><span></span>
@@ -505,9 +500,9 @@
 
             <ul class="nav-links" id="navLinks">
                 <li><a href="#" data-t="nav_home">ホーム</a></li>
-                <li><a href="#about" data-t="nav_about">について</a></li>
+                <li><a href="#about" data-t="nav_about">キッズIT検定について</a></li>
                 <li><a href="#levels" data-t="nav_levels">レベル</a></li>
-                <li><a href="#start" data-t="nav_start">始める</a></li>
+                <li><a href="/3級/" data-t="nav_start">3級に挑戦</a></li>
             </ul>
         </div>
     </nav>
@@ -684,123 +679,7 @@
     </footer>
 
     <script>
-    // --- 翻訳データ ---
-    const translations = {
-        ja: {
-            header_badge: "新しいスキルを身につけよう！",
-            header_title: "キッズIT検定",
-            header_subtitle: "小学生のためのデジタルスキル認定試験",
-            nav_home: "ホーム",
-            nav_about: "について",
-            nav_levels: "レベル",
-            nav_start: "始める",
-            stat_students: "受験者数",
-            stat_satisfaction: "満足度",
-            stat_levels: "難易度レベル",
-            stat_available: "いつでも受験",
-            features_title: "キッズIT検定の特徴",
-            feature1_title: "楽しく学べる",
-            feature1_desc: "ゲーム感覚で楽しくITスキルが身につきます",
-            feature2_title: "段階的な学習",
-            feature2_desc: "初心者から上級者まで、自分のペースで進められます",
-            feature3_title: "認定資格取得",
-            feature3_desc: "合格すると公式認定証が取得できます",
-            feature4_title: "どこからでも受験",
-            feature4_desc: "パソコンやタブレットでいつでも受験できます",
-            feature5_title: "専門家監修",
-            feature5_desc: "教育現場のプロが問題を作成しています",
-            feature6_title: "進路に有利",
-            feature6_desc: "学校推薦やプログラミング教室の実績として活用できます",
-            levels_title: "難易度レベル",
-            levels_desc: "4つのレベルから、自分に合ったチャレンジができます",
-            level_bronze: "初心者向け<br>基本操作を学ぶ",
-            level_silver: "初級者向け<br>アプリの使い方",
-            level_gold: "中級者向け<br>プログラミング基礎",
-            level_platinum: "上級者向け<br>実践的なスキル",
-            content_title: "出題分野",
-            content_category1: "📲 デジタル基礎",
-            content_cat1_desc: "パソコンの基本操作、ファイル管理、インターネットの使い方",
-            content_category2: "✏️ 文書作成",
-            content_cat2_desc: "Word・Google Docsなどでのドキュメント作成スキル",
-            content_category3: "📊 表計算",
-            content_cat3_desc: "Excel・Google Sheetsを使ったデータ分析の基本",
-            content_category4: "🌐 情報セキュリティ",
-            content_cat4_desc: "パスワード管理、個人情報保護、ネットリテラシー",
-            content_category5: "⚙️ プログラミング",
-            content_cat5_desc: "Scratch、Pythonなどの基本的なプログラミング概念",
-            testimonials_title: "受験者の声",
-            testimonial1_text: ""問題がわかりやすくて、楽しく勉強できました！ゴールド級に合格できてうれしいです。"",
-            testimonial1_author: "- 小学5年生 田中太郎",
-            testimonial2_text: ""自分のペースで学べるので、苦手な部分も何度も挑戦できました。認定証がもらえるのがモチベーション！"",
-            testimonial2_author: "- 小学6年生 鈴木花子",
-            testimonial3_text: ""学校の授業では習わないスキルが身につくのが良いです。友達と一緒に受験して、競争も楽しい！"",
-            testimonial3_author: "- 小学4年生 佐藤翔太",
-            cta_title: "さあ、チャレンジしましょう！",
-            cta_desc: "今すぐ登録して、君のITスキルを証明しよう",
-            btn_start_exam: "今すぐ受験",
-            btn_learn: "学習を始める",
-            btn_info: "詳しく知る",
-            footer_copyright: "&copy; 2026 キッズIT検定. すべての権利を保有しています.",
-            footer_status: "ステータス: サービス稼働中"
-        },
-        en: {
-            header_badge: "Learn New Skills!",
-            header_title: "Kids IT Certification",
-            header_subtitle: "Digital Skills Certification Exam for Elementary School Students",
-            nav_home: "Home",
-            nav_about: "About",
-            nav_levels: "Levels",
-            nav_start: "Get Started",
-            stat_students: "Test Takers",
-            stat_satisfaction: "Satisfaction",
-            stat_levels: "Difficulty Levels",
-            stat_available: "Available 24/7",
-            features_title: "Features of Kids IT Certification",
-            feature1_title: "Fun Learning",
-            feature1_desc: "Learn IT skills through game-like activities",
-            feature2_title: "Progressive Learning",
-            feature2_desc: "Learn at your own pace, from beginner to advanced",
-            feature3_title: "Official Certification",
-            feature3_desc: "Receive an official certificate upon passing",
-            feature4_title: "Exam Anywhere",
-            feature4_desc: "Take the exam on computers and tablets anytime",
-            feature5_title: "Expert Created",
-            feature5_desc: "Questions are created by education professionals",
-            feature6_title: "Career Advantage",
-            feature6_desc: "Great for school recommendations and coding programs",
-            levels_title: "Difficulty Levels",
-            levels_desc: "Choose from 4 levels that match your skills",
-            level_bronze: "Beginner Level<br>Learn Basic Operations",
-            level_silver: "Beginner+ Level<br>Learn App Usage",
-            level_gold: "Intermediate Level<br>Programming Basics",
-            level_platinum: "Advanced Level<br>Practical Skills",
-            content_title: "Exam Topics",
-            content_category1: "📲 Digital Basics",
-            content_cat1_desc: "Computer basics, file management, internet usage",
-            content_category2: "✏️ Document Creation",
-            content_cat2_desc: "Creating documents with Word and Google Docs",
-            content_category3: "📊 Spreadsheets",
-            content_cat3_desc: "Data analysis basics with Excel and Google Sheets",
-            content_category4: "🌐 Information Security",
-            content_cat4_desc: "Password management, privacy protection, digital literacy",
-            content_category5: "⚙️ Programming",
-            content_cat5_desc: "Basic programming concepts with Scratch and Python",
-            testimonials_title: "What Students Say",
-            testimonial1_text: ""The questions were easy to understand and fun! I'm happy I passed the Gold level."",
-            testimonial1_author: "- Taro Tanaka, Grade 5",
-            testimonial2_text: ""I could learn at my own pace and retry difficult parts. Getting a certificate is great motivation!"",
-            testimonial2_author: "- Hanako Suzuki, Grade 6",
-            testimonial3_text: ""I learned skills not taught in school. It's fun competing with friends!"",
-            testimonial3_author: "- Shota Sato, Grade 4",
-            cta_title: "Let's Challenge Yourself!",
-            cta_desc: "Sign up now and prove your IT skills",
-            btn_start_exam: "Start Exam Now",
-            btn_learn: "Start Learning",
-            btn_info: "Learn More",
-            footer_copyright: "&copy; 2026 Kids IT Certification. All Rights Reserved.",
-            footer_status: "Status: Service is Live"
-        }
-    };
+
 
     // --- ハンバーガーメニューの開閉処理 ---
     const menuToggle = document.getElementById('menuToggle');
@@ -830,17 +709,6 @@
     }
 
     // --- 言語切り替え機能 ---
-    function changeLanguage(lang) {
-        document.documentElement.lang = lang;
-        safeStorage.set("preferred_lang", lang);
-        
-        document.querySelectorAll('[data-t]').forEach(el => {
-            const key = el.getAttribute('data-t');
-            if (translations[lang] && translations[lang][key]) {
-                el.innerHTML = translations[lang][key];
-            }
-        });
-    }
 
     // --- セーフストレージ ---
     const safeStorage = {
@@ -849,14 +717,6 @@
     };
 
     // 初期化時に保存された言語設定を読み込む
-    window.addEventListener('DOMContentLoaded', () => {
-        const savedLang = safeStorage.get("preferred_lang") || 'ja';
-        const langSelector = document.getElementById('langSelector');
-        if (langSelector) {
-            langSelector.value = savedLang;
-        }
-        changeLanguage(savedLang);
-    });
 
     // --- スクロールインジケーターの制御 ---
     window.addEventListener('scroll', () => {
