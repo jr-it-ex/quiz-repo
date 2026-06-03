@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小学生向け IT検定 準1級</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts (Kiwi Maru & Montserrat for a slightly cooler look) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Kiwi Maru', serif;
+    }
+    .font-english {
+      font-family: 'Montserrat', sans-serif;
+    }
+    /* アニメーション効果 */
+    .bounce-in {
+      animation: bounceIn 0.5s ease-out;
+    }
+    @keyframes bounceIn {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.05); }
+      70% { transform: scale(0.9); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .wiggle {
+      animation: wiggle 0.5s ease-in-out infinite;
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-3deg); }
+      50% { transform: rotate(3deg); }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900 min-h-screen flex flex-col items-center justify-between p-4 selection:bg-indigo-500 selection:text-white text-slate-100">
+
+  <!-- ヘッダー -->
+  <header class="w-full max-w-2xl text-center py-4">
+    <h1 class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-300 drop-shadow-md font-english">
+      💻 IT検定 準1級 💻
+    </h1>
+    <p class="text-xs md:text-sm text-indigo-300 mt-1 font-bold tracking-widest">
+      小学校5年生向け ・ 実践的なIT知識に挑戦！
+    </p>
+  </header>
+
+  <!-- メインコンテンツ表示エリア -->
+  <main class="w-full max-w-2xl bg-slate-800 rounded-3xl shadow-2xl border-4 border-indigo-500 p-6 md:p-8 flex-grow flex flex-col justify-between my-2 relative overflow-hidden">
+    
+    <!-- スタート画面 -->
+    <div id="start-screen" class="flex flex-col items-center justify-center text-center py-4 space-y-6">
+      <div class="text-6xl wiggle">⚡</div>
+      <h2 class="text-2xl md:text-3xl font-bold text-purple-400 leading-relaxed">
+        IT（アイティー）の世界を<br>もっと深く学ぼう！
+      </h2>
+      <div class="bg-slate-900 border-2 border-indigo-500 rounded-2xl p-4 text-left text-slate-300 space-y-2 text-sm md:text-base">
+        <p class="font-bold text-center text-purple-300 mb-2">⭐ 準1級のルール ⭐</p>
+        <p>・クイズは全部で <strong>３０問</strong> 出題されます。</p>
+        <p>・小学校5年生で習う漢字や、少し難しい専門用語が登場します。</p>
+        <p>・4択または3択の中から、正しいものを1つ選んでください。</p>
+        <p>・<strong>２４問（8割）</strong> 以上正解すると「合格（ごうかく）」です！</p>
+      </div>
+      <button onclick="startGame()" class="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold text-xl md:text-2xl px-12 py-5 rounded-full shadow-lg transform hover:scale-105 active:scale-95 transition duration-200 border-b-4 border-indigo-700">
+        検定を開始する！🏁
+      </button>
+    </div>
+
+    <!-- クイズ画面（初期は非表示） -->
+    <div id="quiz-screen" class="hidden flex-col justify-between h-full space-y-6">
+      <!-- 進行度バー -->
+      <div>
+        <div class="flex justify-between items-center text-slate-400 font-bold mb-1 text-sm md:text-base">
+          <span id="question-number-text" class="text-purple-400 text-lg">第 1 問 / 30問</span>
+          <span id="score-text">正解数: 0</span>
+        </div>
+        <div class="w-full bg-slate-700 h-4 rounded-full overflow-hidden">
+          <div id="progress-bar" class="bg-gradient-to-r from-purple-500 to-indigo-500 h-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- 問題文エリア -->
+      <div class="text-center py-4 flex-grow flex flex-col justify-center">
+        <!-- イラスト代わりの大きな絵文字 -->
+        <div id="question-emoji" class="text-6xl md:text-7xl mb-4 bounce-in">⚙️</div>
+        <h3 id="question-text" class="text-lg md:text-xl font-bold text-slate-100 leading-relaxed px-2">
+          ここに問題文が入ります。
+        </h3>
+      </div>
+
+      <!-- 選択肢ボタンエリア -->
+      <div id="choices-container" class="grid grid-cols-1 gap-3 w-full">
+        <!-- ボタンはJavaScriptで動的に作ります -->
+      </div>
+    </div>
+
+    <!-- 結果・合格証書画面（初期は非表示） -->
+    <div id="result-screen" class="hidden flex-col items-center justify-center text-center py-6 space-y-6">
+      <div id="result-emoji" class="text-7xl bounce-in">🎉</div>
+      <h2 id="result-title" class="text-3xl font-bold text-purple-400">お疲れさまでした！</h2>
+      
+      <p id="result-score-details" class="text-xl text-slate-300 font-bold">
+        30問中 24問正解！
+      </p>
+
+      <!-- 合格証書 (サイバーチックな近未来風デザイン) -->
+      <div id="certificate" class="border-4 border-indigo-400 bg-slate-900 p-6 rounded-2xl shadow-inner max-w-md w-full relative">
+        <div class="absolute top-2 right-2 text-indigo-400 font-bold border border-indigo-400 rounded px-2 transform rotate-12 text-xs font-english">
+          IT KENTEI JUN-1
+        </div>
+        <h3 class="text-2xl font-bold text-indigo-300 mb-4">🏆 準1級 合格証書 🏆</h3>
+        <p class="text-slate-300 text-sm md:text-base leading-loose font-bold text-left px-2">
+          あなたはIT検定 準1級において、小学校5年生レベルの高度なIT知識と情報マナーを身につけていることをここに証明します。
+        </p>
+        <p class="text-right text-indigo-400 mt-4 text-xs md:text-sm font-bold">
+          IT検定実施委員会 より 🏅
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-4 w-full justify-center pt-4">
+        <button onclick="startGame()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold text-lg px-8 py-3 rounded-full shadow-md transform hover:scale-105 active:scale-95 transition duration-200">
+          もう一度チャレンジ 🔄
+        </button>
+        <button onclick="showStartScreen()" class="bg-slate-600 hover:bg-slate-700 text-white font-bold text-lg px-8 py-3 rounded-full shadow-md transform hover:scale-105 active:scale-95 transition duration-200">
+          最初に戻る 🏠
+        </button>
+      </div>
+    </div>
+
+    <!-- まる・ばつ 判定エフェクト用オーバーレイ -->
+    <div id="feedback-overlay" class="absolute inset-0 flex items-center justify-center bg-slate-900 bg-opacity-90 hidden z-10 transition-opacity duration-200">
+      <div id="feedback-symbol" class="text-9xl font-bold bounce-in"></div>
+    </div>
+
+  </main>
+
+  <!-- フッター -->
+  <footer class="w-full max-w-2xl text-center py-4 text-xs text-slate-500 font-bold">
+    &copy; 2026 こどもITきょうしつ
+  </footer>
+
+  <!-- JavaScriptによるクイズ制御 -->
+  <script>
+    // 30問のクイズデータ（漢字、5年生向け、準1級ちょい難レベル、絵文字付き）
+    const questions = [
+      {
+        emoji: "⌨️",
+        text: "キーボードで文字を打つ際、基本となる手の手元位置（ホームポジション）で、左手と右手の「人差し指」を置く目印の突起がある２つのキーは？",
+        choices: ["S と K", "F と J", "D と L", "G と H"],
+        answer: 1
+      },
+      {
+        emoji: "🌐",
+        text: "インターネット検索の際、2つの言葉の間に「スペース（空白）」をあけて検索することを何と呼ぶ？",
+        choices: ["OR（オア）検索", "NOT（ノット）検索", "AND（アンド）検索", "マイナス検索"],
+        answer: 2
+      },
+      {
+        emoji: "⌨️",
+        text: "選択した文章や画像を「コピー」するときに使う、便利なショートカットキーは？",
+        choices: ["Ctrl + C", "Ctrl + V", "Ctrl + X", "Ctrl + Z"],
+        answer: 0
+      },
+      {
+        emoji: "⌨️",
+        text: "コピーした文章や画像を、別の場所に「貼り付ける（ペースト）」ときに使うショートカットキーは？",
+        choices: ["Ctrl + C", "Ctrl + V", "Ctrl + S", "Ctrl + A"],
+        answer: 1
+      },
+      {
+        emoji: "⌨️",
+        text: "アルファベットの大文字を、キーを押し続けなくても連続して入力できるように固定（ロック）するキーは？",
+        choices: ["Shift（シフト）キー", "Tab（タブ）キー", "Caps Lock（キャプシロック）キー", "Alt（オルト）キー"],
+        answer: 2
+      },
+      {
+        emoji: "🎣",
+        text: "本物そっくりの偽のウェブサイトに誘導し、パスワードやクレジットカード情報を盗み出す詐欺（さぎ）の手法を何という？",
+        choices: ["フィッシング詐欺", "ハンティング詐欺", "スパイメール", "ワンクリック詐欺"],
+        answer: 0
+      },
+      {
+        emoji: "🧠",
+        text: "コンピュータの「頭脳」にあたり、計算や命令の処理を行う、最も中心となるパーツの名前は？",
+        choices: ["ハードディスク", "CPU（シーピーユー）", "メモリー", "グラフィックボード"],
+        answer: 1
+      },
+      {
+        emoji: "📁",
+        text: "パソコンのデータを一時的に置いておく場所で、よく「作業机の広さ」にたとえられる、処理速度に関わるパーツは？",
+        choices: ["メモリー", "SSD", "電源ユニット", "マザーボード"],
+        answer: 0
+      },
+      {
+        emoji: "☁️",
+        text: "自分のパソコンの中ではなく、インターネット上のサーバーにファイルやデータを保存できる仕組みを何という？",
+        choices: ["クラウドストレージ", "ローカルストレージ", "USBメモリ", "ハードディスク"],
+        answer: 0
+      },
+      {
+        emoji: "📧",
+        text: "電子メールを送る際、宛先（To）のほかに「参考として同じメールを送信したい人」を入れる欄を何という？",
+        choices: ["BCC（ビーシーシー）", "CC（シーシー）", "Subject（サブジェクト）", "Address（アドレス）"],
+        answer: 1
+      },
+      {
+        emoji: "🤫",
+        text: "メールを一斉に送る際、他の受信者にメールアドレスが分からないよう（隠して）送信できる欄はどれ？",
+        choices: ["To", "CC", "BCC", "Reply"],
+        answer: 2
+      },
+      {
+        emoji: "🔒",
+        text: "WebサイトのURLが「https://」で始まっているとき、「s」は何を表している？",
+        choices: ["Speed（表示が速いこと）", "Secure（通信が暗号化され安全なこと）", "Social（SNSとつながっていること）", "Search（検索サイトであること）"],
+        answer: 1
+      },
+      {
+        emoji: "🧑‍🤝‍🧑",
+        text: "氏名、住所、電話番号、通っている学校名など、誰のものか特定できる情報を何という？",
+        choices: ["一般情報", "肖像情報", "個人情報", "機密データ"],
+        answer: 2
+      },
+      {
+        emoji: "🎨",
+        text: "小説や絵、音楽、写真、プログラムなど、自分の考えやアイデアを表現した作品を守る権利を何という？",
+        choices: ["特許権（とっきょけん）", "著作権（ちょさくけん）", "肖像権（しょうぞうけん）", "所有権（しょゆうけん）"],
+        answer: 1
+      },
+      {
+        emoji: "📸",
+        text: "自分の顔や姿の写真を、勝手に撮影されたりネットに公開されたりしないように主張できる権利を何という？",
+        choices: ["商標権（しょうひょうけん）", "肖像権（しょうぞうけん）", "著作権", "安全権"],
+        answer: 1
+      },
+      {
+        emoji: "📰",
+        text: "インターネット上で、人をだましたり混乱させたりするために流される「うそのニュース」のことを何という？",
+        choices: ["フェイクニュース", "スピードニュース", "ハッキングニュース", "スパムニュース"],
+        answer: 0
+      },
+      {
+        emoji: "🤖",
+        text: "コンピュータに特定の作業をさせるために、命令を順番に書き並べたものを何という？",
+        choices: ["アルゴリズム", "プログラム", "データベース", "ネットワーク"],
+        answer: 1
+      },
+      {
+        emoji: "🗺️",
+        text: "コンピュータで問題を解決したり、計算を行ったりするための「手順や計算方法」のことを何という？",
+        choices: ["プログラム", "システム", "アルゴリズム", "ルール"],
+        answer: 2
+      },
+      {
+        emoji: "⌨️",
+        text: "キーボードの「Shiftキー」を押しながらアルファベットのキーを押すと、どのように入力される？",
+        choices: ["ひらがなになる", "大文字（または小文字）に切り替わる", "文字が消去される", "カタカナになる"],
+        answer: 1
+      },
+      {
+        emoji: "🖼️",
+        text: "パソコンやタブレットの画面に映っている表示を、そのまま画像データとして保存する機能を何という？",
+        choices: ["スクリーンショット", "ダウンロード", "ブラウジング", "ペースト"],
+        answer: 0
+      },
+      {
+        emoji: "🛡️",
+        text: "子どもにとって有害、または危険なWebサイトやアプリへのアクセスを制限する仕組みを何という？",
+        choices: ["フィルタリング", "ファイアウォール", "ウイルスチェック", "ブロックバスター"],
+        answer: 0
+      },
+      {
+        emoji: "🖱️",
+        text: "マウスを動かしたときに、パソコンの画面上で連動して動く矢印マークの正しい呼び方は？",
+        choices: ["マウスクリック", "マウスポインタ（カーソル）", "ターゲット", "ポインティングデバイス"],
+        answer: 1
+      },
+      {
+        emoji: "📥",
+        text: "インターネット上のサーバーから、自分のパソコンやスマホに画像や音楽などのデータを取り込むことを何という？",
+        choices: ["アップロード", "ダウンロード", "転送（てんそう）", "インストール"],
+        answer: 1
+      },
+      {
+        emoji: "📤",
+        text: "自分のパソコンやスマホにあるデータを、インターネット上のサーバーへ送り出すことを何という？",
+        choices: ["ダウンロード", "アップロード", "ログイン", "同期（どうき）"],
+        answer: 1
+      },
+      {
+        emoji: "🌐",
+        text: "ウェブサイト（ホームページ）を見るためのアプリ（例：Google Chrome、Microsoft Edge、Safariなど）の総称は？",
+        choices: ["検索エンジン", "ブラウザ", "SNS", "OS（オペレーティングシステム）"],
+        answer: 1
+      },
+      {
+        emoji: "🖥️",
+        text: "パソコンを動かすための最も基本となるシステム（WindowsやmacOSなど）を何という？",
+        choices: ["ハードウェア", "ブラウザ", "OS（オペレーティングシステム）", "アプリケーション"],
+        answer: 2
+      },
+      {
+        emoji: "📶",
+        text: "街中にあるパスワード設定のない「フリーWi-Fi（公衆無線LAN）」を使うときに、絶対に避けるべき行動は？",
+        choices: ["ニュース記事を読むこと", "動画を視聴すること", "クレジットカード情報や個人情報を入力すること", "目的地の地図を調べること"],
+        answer: 2
+      },
+      {
+        emoji: "❄️",
+        text: "パソコンやアプリの動きが突然止まり、キーボードやマウスの操作を全く受け付けなくなる現象を何という？",
+        choices: ["クラッシュ", "フリーズ", "シャットダウン", "スリープ"],
+        answer: 1
+      },
+      {
+        emoji: "🗂️",
+        text: "パソコンの中でデータを整理するために、フォルダの中にさらにフォルダを作るような階層（かいそう）構造を何という？",
+        choices: ["ネットワーク構造", "木構造（ツリー構造）", "ボックス構造", "フラット構造"],
+        answer: 1
+      },
+      {
+        emoji: "🔄",
+        text: "パソコンをウイルスなどの危険から守るために、OSやウイルス対策ソフトに対して行うべき最も重要な作業は？",
+        choices: ["常に最新の状態にアップデート（更新）する", "週に1回、電源を切らずにおいておく", "すべての通知をオフにする", "ファイルを毎日すべて削除する"],
+        answer: 0
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    // Web Audio API による効果音生成（外部ファイル不要で動作）
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(type) {
+      if (!audioCtx) return;
+      
+      // ブラウザ制限対策（オーディオコンテキスト再開）
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === 'correct') {
+        // ピンポン（正解）
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.4);
+      } else if (type === 'incorrect') {
+        // ブブー（不正解）
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+        osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.3);
+      } else if (type === 'pass') {
+        // ファンファーレ（合格）
+        osc.type = 'triangle';
+        const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50]; // スケールアップした綺麗な音階
+        notes.forEach((freq, index) => {
+          const oscSeq = audioCtx.createOscillator();
+          const gainSeq = audioCtx.createGain();
+          oscSeq.type = 'triangle';
+          oscSeq.frequency.setValueAtTime(freq, audioCtx.currentTime + index * 0.1);
+          gainSeq.connect(audioCtx.destination);
+          oscSeq.connect(gainSeq);
+          gainSeq.gain.setValueAtTime(0.12, audioCtx.currentTime + index * 0.1);
+          gainSeq.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + index * 0.1 + 0.35);
+          oscSeq.start(audioCtx.currentTime + index * 0.1);
+          oscSeq.stop(audioCtx.currentTime + index * 0.1 + 0.35);
+        });
+      }
+    }
+
+    // スタート画面に戻る
+    function showStartScreen() {
+      document.getElementById('start-screen').classList.remove('hidden');
+      document.getElementById('quiz-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.add('hidden');
+    }
+
+    // ゲーム開始
+    function startGame() {
+      // オーディオ再開
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      currentQuestionIndex = 0;
+      score = 0;
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.add('hidden');
+      document.getElementById('quiz-screen').classList.remove('hidden');
+      loadQuestion();
+    }
+
+    // 問題の読み込み
+    function loadQuestion() {
+      const q = questions[currentQuestionIndex];
+      
+      // 進行情報の更新
+      document.getElementById('question-number-text').innerText = `第 ${currentQuestionIndex + 1} 問 / 30問`;
+      document.getElementById('score-text').innerText = `正解数: ${score}`;
+      
+      const progressPercent = ((currentQuestionIndex) / questions.length) * 100;
+      document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+      // 絵文字と問題文の更新
+      const emojiContainer = document.getElementById('question-emoji');
+      emojiContainer.innerText = q.emoji;
+      
+      // アニメーションのリセット
+      emojiContainer.classList.remove('bounce-in');
+      void emojiContainer.offsetWidth; // リフロー
+      emojiContainer.classList.add('bounce-in');
+
+      document.getElementById('question-text').innerText = q.text;
+
+      // 選択肢ボタンの作成
+      const choicesContainer = document.getElementById('choices-container');
+      choicesContainer.innerHTML = '';
+
+      // サイバーカラーパレット
+      const colors = [
+        'from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-indigo-800 text-white',
+        'from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 border-cyan-800 text-white',
+        'from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 border-slate-900 text-slate-100',
+        'from-fuchsia-600 to-pink-600 hover:from-fuchsia-500 hover:to-pink-500 border-pink-800 text-white'
+      ];
+
+      q.choices.forEach((choice, index) => {
+        const btn = document.createElement('button');
+        btn.className = `w-full bg-gradient-to-r ${colors[index % colors.length]} font-bold text-base md:text-lg py-3 px-5 rounded-2xl shadow-lg border-b-4 transform active:scale-95 transition-all text-left flex items-center space-x-3`;
+        
+        // 選択肢の番号表示
+        const badge = document.createElement('span');
+        badge.className = "bg-white text-slate-900 rounded-full h-7 w-7 flex items-center justify-center font-black text-xs shrink-0 border border-indigo-200 font-english";
+        badge.innerText = index + 1;
+        
+        const label = document.createElement('span');
+        label.innerText = choice;
+
+        btn.appendChild(badge);
+        btn.appendChild(label);
+        
+        btn.onclick = () => selectChoice(index);
+        choicesContainer.appendChild(btn);
+      });
+    }
+
+    // 選択肢が選ばれたときの判定
+    function selectChoice(selectedIndex) {
+      const q = questions[currentQuestionIndex];
+      const isCorrect = (selectedIndex === q.answer);
+
+      // フィードバック表示の準備
+      const overlay = document.getElementById('feedback-overlay');
+      const symbol = document.getElementById('feedback-symbol');
+
+      if (isCorrect) {
+        score++;
+        symbol.innerText = "⭕";
+        symbol.className = "text-9xl text-emerald-400 bounce-in";
+        playSound('correct');
+      } else {
+        symbol.innerText = "❌";
+        symbol.className = "text-9xl text-rose-500 bounce-in";
+        playSound('incorrect');
+      }
+
+      // オーバーレイを表示して1秒待つ
+      overlay.classList.remove('hidden');
+      overlay.style.opacity = '1';
+
+      setTimeout(() => {
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+          overlay.classList.add('hidden');
+          nextQuestion();
+        }, 200);
+      }, 1000);
+    }
+
+    // 次の問題へ、または終了判定
+    function nextQuestion() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    // 結果表示
+    function showResults() {
+      document.getElementById('quiz-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.remove('hidden');
+
+      const resultEmoji = document.getElementById('result-emoji');
+      const resultTitle = document.getElementById('result-title');
+      const scoreDetails = document.getElementById('result-score-details');
+      const certificate = document.getElementById('certificate');
+
+      scoreDetails.innerHTML = `30問中 <strong class="text-3xl text-purple-400">${score}問</strong> 正解！`;
+
+      // 24問以上で合格
+      if (score >= 24) {
+        resultEmoji.innerText = "🏆";
+        resultTitle.innerText = "🎉 準1級 合格おめでとう！ 🎉";
+        resultTitle.className = "text-3xl md:text-4xl font-bold text-yellow-400 wiggle";
+        certificate.classList.remove('hidden');
+        playSound('pass');
+      } else {
+        resultEmoji.innerText = "✊";
+        resultTitle.innerText = "おしかった！再チャレンジしよう！";
+        resultTitle.className = "text-2xl md:text-3xl font-bold text-indigo-300";
+        certificate.classList.add('hidden'); // 不合格の場合は賞状を表示しない
+      }
+    }
+  </script>
+</body>
+</html>
