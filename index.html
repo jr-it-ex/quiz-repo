@@ -358,17 +358,48 @@
             font-size: 0.85rem;
             opacity: 0.95;
         }
-        #special-mobile-chat-container { display: none; position: fixed; bottom: 32px; right: 32px; z-index: 99999; }
-        #special-mobile-chat-btn {
-            display: flex; align-items: center; gap: 10px; padding: 16px 28px;
-            background: var(--gradient-orange); color: var(--white); border: none;
-            font-size: 1.1rem; font-weight: 800; border-radius: 9999px; cursor: pointer;
-        }
-        #special-mobile-close-btn {
-            position: absolute; top: -8px; left: -8px; width: 28px; height: 28px;
-            background: var(--dark); color: var(--white); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; border: 2px solid var(--white);
-        }
+#special-mobile-chat-container {
+    display: none; /* JSで表示を切り替える前提 */
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 99999;
+    /* 基準点を追加 */
+    position: relative; 
+}
+
+#special-mobile-chat-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 28px;
+    /* フォールバック（変数が無いときの代替色）を追加 */
+    background: var(--gradient-orange, linear-gradient(135deg, #ff7e5f, #feb47b));
+    color: var(--white, #ffffff);
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 800;
+    border-radius: 9999px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* ボタンを立体的に見せる装飾 */
+}
+
+#special-mobile-close-btn {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    width: 28px;
+    height: 28px;
+    background: var(--dark, #333333);
+    color: var(--white, #ffffff);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--white, #ffffff);
+    cursor: pointer; /* クリック可能であることを明示 */
+}
+
         /* --- CTA ボタン --- */
         .cta-buttons {
             display: flex;
